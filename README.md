@@ -112,3 +112,10 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## curls capitulo 1
+
+$ curl -s http://localhost:3000/health
+
+$ curl -s http://localhost:3000/health/version
+
