@@ -10,23 +10,26 @@ import {
   HttpCode,
   Query,
 } from '@nestjs/common';
+import { ProductDto } from './dto/product.dto.js';
+import { UpdateProductDto } from './dto/update-product.dto.js';
+import { CreateProductDto } from './dto/create-product.dto.js';
 
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  stock: number;
-};
+//type Product = {
+  //id: number;
+  //name: string;
+  //price: number;
+  //stock: number;
+//};
 
 @Controller('products')
 export class ProductsController {
-  private products: Product[] = [];
+  private products: ProductDto[] = [];
   private nextId = 1;
 
   // Desafio linha A capitulo 2 
   // Endpoint para buscar todos os produtos ou filtrar por nome
   @Get()
-  findAll(@Query('q') q?: string) {
+  findAll(@Query('q') q?: string) : ProductDto[] {
     if (!q) {
       return this.products; 
     }
@@ -38,7 +41,7 @@ export class ProductsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Product {
+  findbyId(@Param('id') id: string): ProductDto {
     const product = this.products.find((p) => p.id === Number(id));
     if (!product) {
       throw new NotFoundException(`Produto ${id} não encontrado`);
@@ -47,12 +50,13 @@ export class ProductsController {
   }
 
   @Post()
-  create(@Body() body: { name: string; price: number; stock: number }): Product {
-    const product: Product = {
+  create(@Body() createProductDto: CreateProductDto): ProductDto {
+    const { name, price, stock } = createProductDto;
+    const product: ProductDto = {
       id: this.nextId++,
-      name: body.name,
-      price: body.price,
-      stock: body.stock,
+      name,
+      price,
+      stock,
     };
     this.products.push(product);
     return product;
@@ -60,21 +64,22 @@ export class ProductsController {
 
   @Put(':id')
   update(
-    @Param('id') id: string,
-    @Body() body: { name: string; price: number; stock: number },
-  ): Product {
-    const product = this.findOne(id);
-    product.name = body.name;
-    product.price = body.price;
-    product.stock = body.stock;
+    @Param('id') id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ): ProductDto {
+    const product = this.products.find((p) => p.id === id);
+    if (!product) {
+      throw new NotFoundException(`Produto ${id} não encontrado`);
+    }
+    Object.assign(product, updateProductDto);
     return product;
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string): void {
-    const index = this.products.findIndex((p) => p.id === Number(id));
-    if (index < 0) {
+  delete(@Param('id') id: number){
+    const index = this.products.findIndex((p) => p.id === id);
+    if (index === -1) {
       throw new NotFoundException(`Produto ${id} não encontrado`);
     }
     this.products.splice(index, 1);
