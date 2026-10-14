@@ -130,6 +130,8 @@ $ curl -s -X POST http://localhost:3000/products \
   
 $ curl -s http://localhost:3000/products
 
+$ http://localhost:3000/products?q="nome do produto"   //busca por nome do produto
+
 
 
 
