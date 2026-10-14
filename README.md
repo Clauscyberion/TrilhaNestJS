@@ -120,18 +120,20 @@ $ curl -s http://localhost:3000/health
 $ curl -s http://localhost:3000/health/version
 
 
-## curls capitulo 2 
-  
+## curls capitulo 2   
   
 $ curl -s -X POST http://localhost:3000/products \
   -H 'Content-Type: application/json' \
   -d '{"name":"nome do produto","price":39.9,"stock":10}'
-
-  
+    
 $ curl -s http://localhost:3000/products
+
+
+## curls capitulo 3 DESAFIO 
 
 $ http://localhost:3000/products?q="nome do produto"   //busca por nome do produto
 
+$ http://localhost:3000/catalog/summary    //verifica a quantidade de produtos e soma o estoque
 
 
 

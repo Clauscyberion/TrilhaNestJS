@@ -15,12 +15,6 @@ import { UpdateProductDto } from './dto/update-product.dto.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { ProductsService } from './products.service.js';
 
-//type Product = {
-  //id: number;
-  //name: string;
-  //price: number;
-  //stock: number;
-//};
 
 @Controller('products')
 export class ProductsController {

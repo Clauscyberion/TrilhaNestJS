@@ -3,12 +3,7 @@ import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
 import { ProductDto } from './dto/product.dto.js';
 
-//export type Product = {
-  //id: number;
-  //name: string;
-  //price: number;
-  //stock: number;
-//};
+
 
 @Injectable()
 export class ProductsService {
