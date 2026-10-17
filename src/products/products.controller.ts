@@ -24,25 +24,24 @@ export class ProductsController {
   // Desafio linha A capitulo 2 
   // Endpoint para buscar todos os produtos ou filtrar por nome
   @Get()
-  findAll(@Query('q') q?: string) : ProductDto[] {
+  async  findAll(@Query('q') q?: string) : Promise<ProductDto[]> {
     if (!q) {
-      return this.productsService.findAll(); 
+      return await this.productsService.findAll(); 
     }
     
     // Filtra ignorando maiúsculas/minúsculas
-    return this.productsService.findAll().filter(product =>
+    return (await this.productsService.findAll()).filter(product =>
       product.name.toLowerCase().includes(q.toLowerCase()),
     );
   }
 
   @Get(':id')
-  findbyId(@Param('id') id: string): ProductDto {
-    
-    return this.productsService.findbyId(Number(id));
+   findbyId(@Param('id') id: string): Promise<ProductDto> {
+    return  this.productsService.findbyId(Number(id));
   }
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto): ProductDto {
+  create(@Body() createProductDto: CreateProductDto): Promise<ProductDto> {
     
     return this.productsService.create(createProductDto);
   }
@@ -51,7 +50,7 @@ export class ProductsController {
   update(
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
-  ): ProductDto {
+  ): Promise<ProductDto> {
  
     return this.productsService.update(id, updateProductDto);
   }

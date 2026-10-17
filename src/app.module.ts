@@ -5,9 +5,28 @@ import { ProductsModule } from './products/products.module.js';
 import { CatalogService } from './catalog/catalog.service.js';
 import { CatalogController } from './catalog/catalog.controller.js';
 import { CatalogModule } from './catalog/catalog.module.js';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [ProductsModule, CatalogModule],
+  imports: [
+    ProductsModule, 
+    CatalogModule,
+    ConfigModule.forRoot({isGlobal: true}),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],  
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.get('DB_HOST'),        
+        port: Number(config.get('DB_PORT')),
+        username: config.get('DB_USERNAME'),
+        password: config.get('DB_PASSWORD'),
+        database: config.get('DB_DATABASE'),
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+    }),
+  ],
   controllers: [AppController, CatalogController],
   providers: [AppService, CatalogService],
 })
