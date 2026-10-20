@@ -135,5 +135,14 @@ $ http://localhost:3000/products?q="nome do produto"   //busca por nome do produ
 
 $ http://localhost:3000/catalog/summary    //verifica a quantidade de produtos e soma o estoque
 
+## curls capitulo 5 teste para categorias
 
+# 1. Criar Categoria
+curl -X POST http://localhost:3000/categories -H "Content-Type: application/json" -d "{\"name\": \"Eletrónicos\"}"
+
+# 2. Associar ao Produto ID 1
+curl -X PATCH http://localhost:3000/products/1/category -H "Content-Type: application/json" -d "{\"categoryId\": 1}"
+
+# 3. Buscar Produtos da Categoria ID 1
+curl -X GET http://localhost:3000/categories/1/products
 

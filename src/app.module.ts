@@ -7,6 +7,7 @@ import { CatalogController } from './catalog/catalog.controller.js';
 import { CatalogModule } from './catalog/catalog.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CategoriesModule } from './categories/categories.module.js';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         synchronize: true,
       }),
     }),
+    CategoriesModule,
   ],
   controllers: [AppController, CatalogController],
   providers: [AppService, CatalogService],

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Category } from '../categories/categories.entity.js';
 
 @Entity('products')
 export class Product {
@@ -13,4 +14,12 @@ export class Product {
 
   @Column({ type: 'int' })
   stock: number;
+
+  @Column({ nullable: true })
+  categoryId: number; // Chave estrangeira explícita
+
+  @ManyToOne(() => Category, (category) => category.products, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'categoryId' })
+  category: Category;
+  
 }

@@ -9,6 +9,8 @@ import {
   Put,
   HttpCode,
   Query,
+  Patch,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ProductDto } from './dto/product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
@@ -60,4 +62,14 @@ export class ProductsController {
   delete(@Param('id') id: number){
     return this.productsService.remove(id);
   }
+
+  @Patch(':id/category')
+  updateCategory(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('categoryId', ParseIntPipe) categoryId: number,
+  ) {
+    return this.productsService.updateCategory(id, categoryId);
+  }
+
+
 }

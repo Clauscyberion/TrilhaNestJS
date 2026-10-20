@@ -10,6 +10,9 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProductsService {
+ 
+ 
+ 
   private products: ProductDto[] = [];
   private nextId = 1;
 
@@ -53,5 +56,13 @@ export class ProductsService {
     }
 }
     
+  // Requisito: PATCH /products/:id/category Desafio linha A capitulo 5
+  async updateCategory(productId: number, categoryId: number) {
+    const product = await this.productsRepository.findOne({ where: { id: productId } });
+    if (!product) throw new NotFoundException('Produto não encontrado');
+
+    product.categoryId = categoryId;
+    return this.productsRepository.save(product);
+  }
   
 }
