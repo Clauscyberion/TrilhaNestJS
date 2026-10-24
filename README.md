@@ -146,3 +146,24 @@ curl -X PATCH http://localhost:3000/products/1/category -H "Content-Type: applic
 # 3. Buscar Produtos da Categoria ID 1
 curl -X GET http://localhost:3000/categories/1/products
 
+## curls capitulo 5.1 para orders + desafio pagamento de pedido 
+
+## criar pedido 
+curl -X POST http://localhost:3000/orders \
+  -H "Content-Type: application/json" \
+  -d '{
+    "items": [
+      { "productId": 1, "quantity": 2 }
+    ]
+  }'
+
+## Pagar um pedido (mudar de OPEN para PAID)
+
+curl -X PATCH http://localhost:3000/orders/1/pay
+
+## Cancelar um pedido (Bloqueado se tiver PAID)
+
+curl -X PATCH http://localhost:3000/orders/1/cancel
+
+
+

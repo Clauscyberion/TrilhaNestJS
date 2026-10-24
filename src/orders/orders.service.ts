@@ -73,6 +73,28 @@ export class OrdersService {
     });
   }
 
+
+  // Novo método: Transição de OPEN para PAID , Faz parte do desafio do capitulo 5.1
+  async pay(id: number): Promise<Order> {
+    return this.dataSource.transaction(async (manager) => {
+      const order = await manager.findOne(Order, {
+        where: { id },
+        relations: ['items'],
+      });
+      if (!order) {
+        throw new NotFoundException(`Pedido ${id} não encontrado`);
+      }
+      if (order.status !== 'OPEN') {
+        throw new BadRequestException(
+          `Não é possível pagar este pedido. O estado atual é "${order.status}", mas apenas pedidos com estado "OPEN" podem ser pagos.`,
+        );
+      }
+
+      order.status = 'PAID';
+      return manager.save(order);
+    });
+  }
+
   async cancel(id: number): Promise<Order> {
     return this.dataSource.transaction(async (manager) => {
       const order = await manager.findOne(Order, {
@@ -81,6 +103,12 @@ export class OrdersService {
       });
       if (!order) {
         throw new NotFoundException(`Pedido ${id} não encontrado`);
+      }
+      // Impede cancelar se já estiver PAID ou se não estiver OPEN, Faz parte do desafio do capitulo 5.1
+      if (order.status === 'PAID') {
+        throw new BadRequestException(
+          `Não é possível cancelar o pedido ${id} porque ele já foi pago (estado: PAID).`,
+        );
       }
       if (order.status !== 'OPEN') {
         throw new BadRequestException('só pedidos OPEN podem ser cancelados');

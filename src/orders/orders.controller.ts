@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto.js';
@@ -31,5 +32,10 @@ export class OrdersController {
   @Post(':id/cancel')
   cancel(@Param('id', ParseIntPipe) id: number) {
     return this.ordersService.cancel(id);
+  }
+
+  @Patch(':id/pay')
+  pay(@Param('id', ParseIntPipe) id: number) {
+    return this.ordersService.pay(id);
   }
 }
