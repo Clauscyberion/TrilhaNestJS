@@ -11,11 +11,13 @@ import {
   Query,
   Patch,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductDto } from './dto/product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { ProductsService } from './products.service.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 
 
 @Controller('products')
@@ -43,12 +45,14 @@ export class ProductsController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   create(@Body() createProductDto: CreateProductDto): Promise<ProductDto> {
     
     return this.productsService.create(createProductDto);
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   update(
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
@@ -59,6 +63,7 @@ export class ProductsController {
 
   @Delete(':id')
   @HttpCode(204)
+  @UseGuards(JwtAuthGuard)
   delete(@Param('id') id: number){
     return this.productsService.remove(id);
   }
