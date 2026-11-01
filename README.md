@@ -137,13 +137,13 @@ $ http://localhost:3000/catalog/summary    //verifica a quantidade de produtos e
 
 ## curls capitulo 5 teste para categorias
 
-# 1. Criar Categoria
+ 1. Criar Categoria :
 curl -X POST http://localhost:3000/categories -H "Content-Type: application/json" -d "{\"name\": \"Eletrónicos\"}"
 
-# 2. Associar ao Produto ID 1
+ 2. Associar ao Produto ID 1 :
 curl -X PATCH http://localhost:3000/products/1/category -H "Content-Type: application/json" -d "{\"categoryId\": 1}"
 
-# 3. Buscar Produtos da Categoria ID 1
+ 3. Buscar Produtos da Categoria ID 1 :
 curl -X GET http://localhost:3000/categories/1/products
 
 ## curls capitulo 5.1 para orders + desafio pagamento de pedido 
@@ -165,5 +165,13 @@ curl -X PATCH http://localhost:3000/orders/1/pay
 
 curl -X PATCH http://localhost:3000/orders/1/cancel
 
+## Curl Desafio capitulo 6 (Dados de usuario logado)
 
+curl -X GET http://localhost:3000/auth/me \
+  -H "Authorization: Bearer COLE_SEU_TOKEN_JWT_AQUI"
 
+Teste postman : 1 Fazer login na rota POST /auth/login 
+                2 Numa nova aba postman faça a requisição GET : http://localhost:3000/auth/me Vá ate a aba de Authorization
+                e passe o TOKEN obtido no login.
+
+  
