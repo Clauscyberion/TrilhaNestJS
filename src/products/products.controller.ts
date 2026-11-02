@@ -18,6 +18,8 @@ import { UpdateProductDto } from './dto/update-product.dto.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { ProductsService } from './products.service.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import { Roles } from '../auth/roles.decorator.js';
+import { RolesGuard } from '../auth/roles.guard.js';
 
 
 @Controller('products')
@@ -45,14 +47,16 @@ export class ProductsController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RolesGuard)
+  @Roles('ADMIN')
   create(@Body() createProductDto: CreateProductDto): Promise<ProductDto> {
     
     return this.productsService.create(createProductDto);
   }
 
   @Put(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RolesGuard)
+  @Roles('ADMIN')
   update(
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
@@ -63,7 +67,8 @@ export class ProductsController {
 
   @Delete(':id')
   @HttpCode(204)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   delete(@Param('id') id: number){
     return this.productsService.remove(id);
   }

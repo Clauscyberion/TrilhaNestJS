@@ -175,3 +175,14 @@ Teste postman : 1 Fazer login na rota POST /auth/login
                 e passe o TOKEN obtido no login.
 
   
+## Detalhes de acesso a maquina docker 
+Levantar a maquina docker : docker compose up
+
+Acesso a maquina (bash) : docker exec -it loja-postgres psql -U loja -d loja
+Dará acesso ao terminal de manipulação do bando (loja=#)
+
+Comando para ver todas as tabelas criadas na maquina : \dt   caso queira fechar o console o comando é \q
+
+Comando para consultar dados da tabela : SELECT * FROM nome_da_tabela; 
+
+Exemplo de comando de alteração de um dado de coluna no banco : UPDATE "users" SET role = 'ADMIN' WHERE email = 'email@exemplo.com';
