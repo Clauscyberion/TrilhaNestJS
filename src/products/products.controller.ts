@@ -12,6 +12,11 @@ import {
   Patch,
   ParseIntPipe,
   UseGuards,
+  UploadedFile,
+  BadRequestException,
+  UseInterceptors,
+  StreamableFile,
+  Res,
 } from '@nestjs/common';
 import { ProductDto } from './dto/product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
@@ -21,6 +26,11 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { Roles } from '../auth/roles.decorator.js';
 import { RolesGuard } from '../auth/roles.guard.js';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { join } from 'path';
+import { createReadStream, existsSync } from 'fs';
+import type { Response } from 'express';
 
 
 @Controller('products')
@@ -112,5 +122,42 @@ export class ProductsController {
     return this.productsService.updateCategory(id, categoryId);
   }
 
+  @Post(':id/image')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: './uploads',
+      filename: (_req, file, cb) => {
+        const safe = file.originalname.replace(/\s+/g, '_').toLowerCase();
+        cb(null, `${Date.now()}-${safe}`);
+      },
+    }),
+    limits: { fileSize: 5 * 1024 * 1024 }, // Limite de 5MB
+    fileFilter: (_req, file, cb) => {
+      const ok = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(file.mimetype);
+      if (!ok) return cb(null, false);
+      cb(null, true);
+    }
+  }))
+  async uploadImage(@Param('id', ParseIntPipe) id: number, 
+  @UploadedFile() file: Express.Multer.File) {
+    if (!file) throw new BadRequestException('Envie um arquivo de imagem válido. (jpg, .jpeg, .png)');
+      
+    await this.productsService.updateImageFilename(id, file.filename); 
+    return { productId: id, imageUrl: `/products/${id}/image` };
+  }
+
+
+
+  @Get(':id/image')
+  async getImage(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    const product = await this.productsService.findbyId(id);
+    if (!product || !product.imageFilename) throw new NotFoundException('Produto não possui imagem.');
+    const Path = join(process.cwd(), 'uploads', product.imageFilename);
+    if (!existsSync(Path)) throw new NotFoundException('Arquivo de imagem não encontrado.');
+    createReadStream(Path).pipe(res);
+
+  } 
 
 }

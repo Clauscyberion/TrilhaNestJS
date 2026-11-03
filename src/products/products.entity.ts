@@ -21,5 +21,8 @@ export class Product {
   @ManyToOne(() => Category, (category) => category.products, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'categoryId' })
   category: Category;
+
+  @Column({type : 'varchar',  length: 255, nullable: true })
+  imageFilename: string | null;
   
 }

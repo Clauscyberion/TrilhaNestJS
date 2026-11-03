@@ -10,6 +10,9 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProductsService {
+  findOne(id: number) {
+    throw new Error('Method not implemented.');
+  }
  
  
  
@@ -64,5 +67,14 @@ export class ProductsService {
     product.categoryId = categoryId;
     return this.productsRepository.save(product);
   }
-  
+
+  async updateImageFilename(Id: number, filename: string) {
+    const product = await this.productsRepository.findOne({ where: {id: Id} });
+    if (!product) throw new NotFoundException('Produto com ID ${Id} não encontrado. ');
+    product.imageFilename = filename;
+    return this.productsRepository.save(product);
+  }
+
+
 }
+
