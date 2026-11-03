@@ -190,3 +190,8 @@ Exemplo de comando de alteração de um dado de coluna no banco : UPDATE "users"
 ## Acesso ao Swagger 
 
 http://localhost:3000/api#/
+
+## USO IA
+
+## lembrete
+fazer um arquivo .env
