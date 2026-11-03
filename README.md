@@ -186,3 +186,7 @@ Comando para ver todas as tabelas criadas na maquina : \dt   caso queira fechar 
 Comando para consultar dados da tabela : SELECT * FROM nome_da_tabela; 
 
 Exemplo de comando de alteração de um dado de coluna no banco : UPDATE "users" SET role = 'ADMIN' WHERE email = 'email@exemplo.com';
+
+## Acesso ao Swagger 
+
+http://localhost:3000/api#/

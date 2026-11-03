@@ -20,6 +20,7 @@ import { ProductsService } from './products.service.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { Roles } from '../auth/roles.decorator.js';
 import { RolesGuard } from '../auth/roles.guard.js';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 
 @Controller('products')
@@ -30,6 +31,10 @@ export class ProductsController {
   // Desafio linha A capitulo 2 
   // Endpoint para buscar todos os produtos ou filtrar por nome
   @Get()
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Buscar produtos por nome' })
+  @ApiResponse({ status: 200, description: 'Produtos encontrados' })
+  @ApiResponse({ status: 404, description: 'Produto não encontrado' })
   async  findAll(@Query('q') q?: string) : Promise<ProductDto[]> {
     if (!q) {
       return await this.productsService.findAll(); 
@@ -42,11 +47,20 @@ export class ProductsController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Buscar produto por ID' })
+  @ApiResponse({ status: 200, description: 'Produto encontrado' })
+  @ApiResponse({ status: 404, description: 'Produto não encontrado' })
    findbyId(@Param('id') id: string): Promise<ProductDto> {
     return  this.productsService.findbyId(Number(id));
   }
 
   @Post()
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Criar produto (ADMIN)' })
+  @ApiResponse({ status: 201, description: 'Criado' })
+  @ApiResponse({ status: 401, description: 'Sem token' })
+  @ApiResponse({ status: 403, description: 'Papel insuficiente' })
   @UseGuards(JwtAuthGuard,RolesGuard)
   @Roles('ADMIN')
   create(@Body() createProductDto: CreateProductDto): Promise<ProductDto> {
@@ -55,6 +69,11 @@ export class ProductsController {
   }
 
   @Put(':id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Atualizar produto (ADMIN)' })
+  @ApiResponse({ status: 200, description: 'Atualizado' })
+  @ApiResponse({ status: 401, description: 'Sem token' })
+  @ApiResponse({ status: 403, description: 'Papel insuficiente' })
   @UseGuards(JwtAuthGuard,RolesGuard)
   @Roles('ADMIN')
   update(
@@ -66,6 +85,11 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Remover produto (ADMIN)' })
+  @ApiResponse({ status: 204, description: 'Removido' })
+  @ApiResponse({ status: 401, description: 'Sem token' })
+  @ApiResponse({ status: 403, description: 'Papel insuficiente' })
   @HttpCode(204)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
@@ -74,6 +98,13 @@ export class ProductsController {
   }
 
   @Patch(':id/category')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Atualizar categoria do produto (ADMIN)' })
+  @ApiResponse({ status: 200, description: 'Categoria atualizada' })
+  @ApiResponse({ status: 401, description: 'Sem token' })
+  @ApiResponse({ status: 403, description: 'Papel insuficiente' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   updateCategory(
     @Param('id', ParseIntPipe) id: number,
     @Body('categoryId', ParseIntPipe) categoryId: number,

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,19 @@ app.useGlobalPipes(
       },
     }),
   );
+
+
+
+  const config = new DocumentBuilder()
+    .setTitle('loja-api')
+    .setDescription('API da trilha NestJS — linha P')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
 
 
   await app.listen(process.env.PORT ?? 3000);
